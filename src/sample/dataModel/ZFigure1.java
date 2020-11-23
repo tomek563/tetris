@@ -1,6 +1,7 @@
 package sample.dataModel;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,9 +2,12 @@ package sample.dataModel;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CompositeFigure extends Pane implements PrintableFigure {
     private final List<SingleField> compositeSingleFields;
@@ -18,15 +21,14 @@ public class CompositeFigure extends Pane implements PrintableFigure {
     }
 
     public void addToComposite(Figure figure) {
+        Paint color = figure.singleFields.get(0).getFill();
         List<SingleField> tempSingleFields = transformCompositeIntoSingleFieldsAccordToMods(figure);
         compositeSingleFields.addAll(tempSingleFields);
         getChildren().addAll(tempSingleFields);
-
-//        for (SingleField tempSingleField : tempSingleFields) {
-//            tempSingleField.setFill(Color.ORANGE);
-//        }
+        for (SingleField tempSingleField : tempSingleFields) {
+            tempSingleField.setFill(color);
+        }
     }
-
 
     public List<SingleField> transformCompositeIntoSingleFieldsAccordToMods(Figure figure) {
         List<SingleField> singleFieldsTempList = new ArrayList<>();

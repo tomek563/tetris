@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Game {
     private final Scene scene;
-    private final Pane pane; //todo remove ps!
+    private final Pane pane;
     public final static int FIELD_SIZE = 40;
 
     private final FigureFactory figureFactory;
@@ -22,7 +22,6 @@ public class Game {
     private final CompositeFigure composite;
     private final BoardGame boardGame;
     private boolean running = true;
-
 
     public Game(Scene scene, Pane pane) {
         this.scene = scene;
@@ -47,7 +46,7 @@ public class Game {
 
     private void startTimer() {
         AnimationTimer animationTimer = new AnimationTimer() {
-            private long lastTime=0;
+            private long lastTime = 0;
 
             @Override
             public void handle(long now) {

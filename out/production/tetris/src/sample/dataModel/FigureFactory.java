@@ -6,11 +6,11 @@ public class FigureFactory {
 
     public FigureFactory() {
     }
+
     public Figure getRandomFigura() {
         Random random = new Random();
         int num = random.nextInt(7);
         Figure figure;
-//        num = 0;
         switch (num) {
             case 0:
                 figure = new SquareFigure();

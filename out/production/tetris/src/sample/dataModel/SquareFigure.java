@@ -10,6 +10,7 @@ public class SquareFigure extends Figure {
         getFieldsForPositionUp();
         setSpecificColor();
     }
+
     public void setSpecificColor() {
         for (SingleField tempSingleField : singleFields) {
             tempSingleField.setFill(Color.BROWN);
@@ -19,10 +20,10 @@ public class SquareFigure extends Figure {
     @Override
     public List<SingleField> getFieldsForPositionUp() {
         List<SingleField> singleFields = new ArrayList<>();
-        singleFields.add(new SingleField(4,0));
-        singleFields.add(new SingleField(5,1));
-        singleFields.add(new SingleField(4,1));
-        singleFields.add(new SingleField(5,0));
+        singleFields.add(new SingleField(4, 0));
+        singleFields.add(new SingleField(5, 1));
+        singleFields.add(new SingleField(4, 1));
+        singleFields.add(new SingleField(5, 0));
         return singleFields;
     }
 

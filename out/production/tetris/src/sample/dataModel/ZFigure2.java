@@ -10,6 +10,7 @@ public class ZFigure2 extends Figure {
         getFieldsForPositionUp();
         setSpecificColor();
     }
+
     public void setSpecificColor() {
         for (SingleField tempSingleField : singleFields) {
             tempSingleField.setFill(Color.PURPLE);

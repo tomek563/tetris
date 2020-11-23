@@ -1,9 +1,5 @@
 package sample.dataModel;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class BoardGame {
     protected static final int BOARD_WIDTH = 10;
     protected static final int BOARD_HEIGHT = 15;

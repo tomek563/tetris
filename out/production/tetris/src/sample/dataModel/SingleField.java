@@ -9,23 +9,24 @@ import java.util.Random;
 public class SingleField extends Rectangle {
     private int gridX;
     private int gridY;
-    private  int actualGridX;
-    private  int actualGridY;
+    private int actualGridX;
+    private int actualGridY;
 
     public SingleField(int gridX, int gridY) {
         this.gridX = gridX;
         this.gridY = gridY;
-        updatePosition(0,0);
+        updatePosition(0, 0);
         setWidth(Game.FIELD_SIZE);
         setHeight(Game.FIELD_SIZE);
         actualGridX = gridX;
         actualGridY = gridY;
     }
+
     public void updatePosition(int modX, int modY) {
         actualGridX = gridX + modX;
         actualGridY = gridY + modY;
-        setX((actualGridX)*Game.FIELD_SIZE);
-        setY((actualGridY)*Game.FIELD_SIZE);
+        setX((actualGridX) * Game.FIELD_SIZE);
+        setY((actualGridY) * Game.FIELD_SIZE);
 
     }
 
@@ -36,6 +37,7 @@ public class SingleField extends Rectangle {
     public int getGridY() {
         return gridY;
     }
+
     public void setColor(Color color) {
         setFill(color);
     }
@@ -49,7 +51,7 @@ public class SingleField extends Rectangle {
 
     }
 
-    public boolean isOnField(SingleField other){
+    public boolean isOnField(SingleField other) {
         return actualGridX == other.actualGridX && actualGridY == other.actualGridY;
     }
 

@@ -1,15 +1,29 @@
 package sample.dataModel;
+
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CompositeFigure extends Pane implements PrintableFigure {
-    private List<SingleField> compositeSingleFields;
+    private final List<SingleField> compositeSingleFields;
+    private final List<Color> colors;
+    private final Random random = new Random();
 
     public CompositeFigure() {
         this.compositeSingleFields = new ArrayList<>();
+        this.colors = new ArrayList<>();
+        colors.add(Color.ORANGE);
+        colors.add(Color.YELLOW);
+        colors.add(Color.GREEN);
+        colors.add(Color.BROWN);
+        colors.add(Color.RED);
+        colors.add(Color.BLUE);
+        colors.add(Color.PURPLE);
     }
 
     public List<SingleField> getCompositeSingleFields() {
@@ -17,13 +31,16 @@ public class CompositeFigure extends Pane implements PrintableFigure {
     }
 
     public void addToComposite(Figure figure) {
+        Paint fill1 = figure.singleFields.get(0).getFill();
+//        Paint fill = tempSingleField.getFill();
+//        System.out.println("kolor "+fill);
         List<SingleField> tempSingleFields = transformCompositeIntoSingleFieldsAccordToMods(figure);
         compositeSingleFields.addAll(tempSingleFields);
         getChildren().addAll(tempSingleFields);
 
-//        for (SingleField tempSingleField : tempSingleFields) {
-//            tempSingleField.setFill(Color.ORANGE);
-//        }
+        for (SingleField tempSingleField : tempSingleFields) {
+            tempSingleField.setFill(fill1);
+        }
     }
 
 
@@ -86,13 +103,6 @@ public class CompositeFigure extends Pane implements PrintableFigure {
                 removeLineFields(integer);
             }
         }
-        for (Integer integer : listOfNumberOfFullRow) {
-            lowerRowsAboveErasedLine(integer);
-        }
-
-    }
-    public void erase(List<Integer> listOfNumberOfFullRow) {
-
         for (Integer integer : listOfNumberOfFullRow) {
             lowerRowsAboveErasedLine(integer);
         }

@@ -23,26 +23,16 @@ public class Controller {
 
     @FXML
     public void startGame() {
-//        Game game = new Game();
-//        pane.add(rectangle,0,0);
-//
-//
-//        game.startGame();
-//        System.out.println("gra uruchamia sie");
     }
+
     @FXML
     public void initialize() {
         EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//                System.out.println("dasdaw");
             }
         };
         nowaGra.addEventHandler(ActionEvent.ACTION, eventHandler);
-
-
     }
-
-
 
 }

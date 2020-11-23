@@ -21,6 +21,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
         this.modX = 0;
         this.modY = 0;
     }
+
     public Figure(Figure figure) {
         this.singleFields = new ArrayList<>(figure.singleFields);
         getChildren().addAll(this.singleFields);
@@ -137,7 +138,6 @@ public abstract class Figure extends Pane implements PrintableFigure {
         getChildren().clear();
         getChildren().addAll(this.singleFields);
     }
-
 
 
     public List<SingleField> setPosition(Position position) {

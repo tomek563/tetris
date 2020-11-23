@@ -19,10 +19,10 @@ public class LongFigure extends Figure {
 
     public List<SingleField> getFieldsForPositionUp() {
         List<SingleField> singleFields = new ArrayList<>();
-        singleFields.add(new SingleField(3,0));
-        singleFields.add(new SingleField(4,0));
-        singleFields.add(new SingleField(5,0));
-        singleFields.add(new SingleField(6,0));
+        singleFields.add(new SingleField(3, 0));
+        singleFields.add(new SingleField(4, 0));
+        singleFields.add(new SingleField(5, 0));
+        singleFields.add(new SingleField(6, 0));
         return singleFields;
     }
 
@@ -34,10 +34,10 @@ public class LongFigure extends Figure {
     @Override
     public List<SingleField> getFieldsForPositionLeft() {
         List<SingleField> singleFields = new ArrayList<>();
-        singleFields.add(new SingleField(4,0));
-        singleFields.add(new SingleField(4,1));
-        singleFields.add(new SingleField(4,2));
-        singleFields.add(new SingleField(4,3));
+        singleFields.add(new SingleField(4, 0));
+        singleFields.add(new SingleField(4, 1));
+        singleFields.add(new SingleField(4, 2));
+        singleFields.add(new SingleField(4, 3));
         return singleFields;
     }
 
