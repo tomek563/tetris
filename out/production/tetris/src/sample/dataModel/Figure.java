@@ -35,6 +35,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
         }
     }
 
+
     public void move(KeyCode keyCode, CompositeFigure compositeFigure) {
         if (keyCode == KeyCode.LEFT) {
             moveFigureLeft();
@@ -112,13 +113,13 @@ public abstract class Figure extends Pane implements PrintableFigure {
     }
 
     public void changeActualPosition() {
-        if (position.equals(Position.UP)) {
+        if (position.equals(Position.UP) && isFuturePositionPossible(Position.RIGHT)) {
             setActualPosition(Position.RIGHT);
-        } else if (position.equals(Position.RIGHT)) {
+        } else if (position.equals(Position.RIGHT) && isFuturePositionPossible(Position.DOWN)) {
             setActualPosition(Position.DOWN);
-        } else if (position.equals(Position.DOWN)) {
+        } else if (position.equals(Position.DOWN) && isFuturePositionPossible(Position.LEFT)) {
             setActualPosition(Position.LEFT);
-        } else {
+        } else if (position.equals(Position.LEFT) && isFuturePositionPossible(Position.UP)) {
             setActualPosition(Position.UP);
         }
     }
@@ -201,6 +202,16 @@ public abstract class Figure extends Pane implements PrintableFigure {
 
     public void setActualPosition(Position position) {
         this.position = position;
+    }
+    public boolean isFuturePositionPossible(Position position) {
+        List<SingleField> tempSingleField = setPosition(position);
+        for (SingleField singleField : tempSingleField) {
+            int i = singleField.getGridX() + modX;
+            if (i<0 || i>9) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
