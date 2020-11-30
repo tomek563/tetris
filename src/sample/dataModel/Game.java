@@ -74,8 +74,8 @@ public class Game {
     public void updateGame() {
         printBoard();
         currentFigure.move(KeyCode.DOWN, composite);
-        composite.removeFullRows();
         handleBottomCollision();
+        composite.removeFullRows();
         checkToFinishGame();
     }
 

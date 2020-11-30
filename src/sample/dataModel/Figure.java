@@ -17,14 +17,14 @@ public abstract class Figure extends Pane implements PrintableFigure {
         this.singleFields = new ArrayList<>();
         List<SingleField> tempSingleFields = setPosition(Position.UP);
         singleFields.addAll(tempSingleFields);
-        getChildren().addAll(this.singleFields);
+        getChildren().addAll(singleFields);
         this.modX = 0;
         this.modY = 0;
     }
 
     public Figure(Figure figure) {
         this.singleFields = new ArrayList<>(figure.singleFields);
-        getChildren().addAll(this.singleFields);
+        getChildren().addAll(singleFields);
         this.modX = figure.modX;
         this.modY = figure.modY;
     }
@@ -37,17 +37,19 @@ public abstract class Figure extends Pane implements PrintableFigure {
 
 
     public void move(KeyCode keyCode, CompositeFigure compositeFigure) {
-        if (keyCode == KeyCode.LEFT) {
-            moveFigureLeft();
-        } else if (keyCode.equals(KeyCode.RIGHT)) {
-            moveFigureRight();
-        } else if (keyCode.equals(KeyCode.SPACE)) {
-            rotate();
-        } else if (keyCode.equals(KeyCode.DOWN)) {
-            moveFigureDown(compositeFigure);
-        }
+        // TODO: 23.11.2020
+            if (keyCode == KeyCode.LEFT && isFuturePositionOfCompositePossible(KeyCode.LEFT ,position, compositeFigure)) {
+                moveFigureLeft();
+            } else if (keyCode.equals(KeyCode.RIGHT) && isFuturePositionOfCompositePossible(KeyCode.RIGHT,position,compositeFigure)) {
+                moveFigureRight();
+            } else if (keyCode.equals(KeyCode.SPACE) /*&& isFuturePositionOfCompositePossible(KeyCode.SPACE, position, compositeFigure)*/) { // TODO: 26.11.2020 obrot inaczej
+                rotate(compositeFigure);
+            } else if (keyCode.equals(KeyCode.DOWN)) {
+                moveFigureDown(compositeFigure);
+            }
         updateSingleFields();
     }
+
 
 
     public void moveFigureDown(CompositeFigure compositeFigure) {
@@ -112,21 +114,21 @@ public abstract class Figure extends Pane implements PrintableFigure {
         return isSingleFieldOnVerticalBorder(-1) || isSingleFieldOnVerticalBorder(BoardGame.BOARD_WIDTH);
     }
 
-    public void changeActualPosition() {
-        if (position.equals(Position.UP) && isFuturePositionPossible(Position.RIGHT)) {
+    public void changeActualPosition(CompositeFigure compositeFigure) {
+        if (position.equals(Position.UP) && isFuturePositionPossible(Position.RIGHT, compositeFigure)) {
             setActualPosition(Position.RIGHT);
-        } else if (position.equals(Position.RIGHT) && isFuturePositionPossible(Position.DOWN)) {
+        } else if (position.equals(Position.RIGHT) && isFuturePositionPossible(Position.DOWN, compositeFigure)) {
             setActualPosition(Position.DOWN);
-        } else if (position.equals(Position.DOWN) && isFuturePositionPossible(Position.LEFT)) {
+        } else if (position.equals(Position.DOWN) && isFuturePositionPossible(Position.LEFT, compositeFigure)) {
             setActualPosition(Position.LEFT);
-        } else if (position.equals(Position.LEFT) && isFuturePositionPossible(Position.UP)) {
+        } else if (position.equals(Position.LEFT) && isFuturePositionPossible(Position.UP, compositeFigure)) {
             setActualPosition(Position.UP);
         }
     }
 
-    public void rotate() {
-        if (!isFigureOnBorderOnLeftoOrRightSideOfBoard()) { // TODO: 25.06.2020 problem jak sie obraca to wychodzi poza plansze
-            changeActualPosition();
+    public void rotate(CompositeFigure compositeFigure) {
+        if (!isFigureOnBorderOnLeftoOrRightSideOfBoard()) {
+            changeActualPosition(compositeFigure);
             updateSingleFieldsByPosition();
         }
     }
@@ -203,15 +205,50 @@ public abstract class Figure extends Pane implements PrintableFigure {
     public void setActualPosition(Position position) {
         this.position = position;
     }
-    public boolean isFuturePositionPossible(Position position) {
+    public boolean isFuturePositionPossible(Position position, CompositeFigure compositeFigure) {
+        System.out.println(position);
+        System.out.println("singleFields przed "+singleFields);
         List<SingleField> tempSingleField = setPosition(position);
         for (SingleField singleField : tempSingleField) {
-            int i = singleField.getGridX() + modX;
-            if (i<0 || i>9) {
+            singleField.setGridX(singleField.getGridX() + modX);
+            singleField.setGridY(singleField.getGridY() + modY);
+            System.out.println("singleField po "+singleField);
+            int i = singleField.getGridX();
+            if (i<0 || i>BoardGame.BOARD_WIDTH-1) {
+                return false;
+            }
+            if (compositeFigure.getCompositeSingleFields().contains(singleField)) {
                 return false;
             }
         }
         return true;
+    }
+
+    public boolean isFuturePositionOfCompositePossible(KeyCode keyCode, Position position, CompositeFigure compositeFigure) { // TODO: 23.11.2020
+        int mod = getExtraMod(keyCode);
+        List<SingleField> tempSingleField = setPosition(position);
+        for (SingleField singleField : tempSingleField) {
+            singleField.setGridX(singleField.getGridX() + modX + mod);
+            singleField.setGridY(singleField.getGridY() + modY);
+            if (compositeFigure.getCompositeSingleFields().contains(singleField)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int getExtraMod(KeyCode keyCode) {
+        int mod;
+        switch(keyCode) {
+            case LEFT: mod = -1;
+                break;
+            case RIGHT: mod =1;
+                break;
+            default:
+                mod = 0;
+                break;
+        }
+        return mod;
     }
 
     @Override
@@ -223,6 +260,4 @@ public abstract class Figure extends Pane implements PrintableFigure {
                 ", modY=" + modY +
                 '}';
     }
-
-
 }

@@ -2,12 +2,10 @@ package sample.dataModel;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CompositeFigure extends Pane implements PrintableFigure {
     private final List<SingleField> compositeSingleFields;
