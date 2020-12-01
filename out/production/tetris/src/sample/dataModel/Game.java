@@ -1,33 +1,27 @@
 package sample.dataModel;
 
 import javafx.animation.AnimationTimer;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Game {
     private final Scene scene;
     private final Pane pane;
-    public final static int FIELD_SIZE = 40;
-
+    protected final static int FIELD_SIZE = 40;
     private final FigureFactory figureFactory;
-    private Figure currentFigure;
     private final CompositeFigure composite;
     private final BoardGame boardGame;
+    private Figure currentFigure;
     private boolean running = true;
 
     public Game(Scene scene, Pane pane) {
         this.scene = scene;
         this.pane = pane;
         this.figureFactory = new FigureFactory();
-        this.currentFigure = figureFactory.getRandomFigura();
+        this.currentFigure = figureFactory.getRandomFigure();
         this.boardGame = new BoardGame();
         this.composite = new CompositeFigure();
     }
@@ -62,7 +56,7 @@ public class Game {
         animationTimer.start();
     }
 
-    public void setUpKeyEvents() {
+    private void setUpKeyEvents() {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -71,19 +65,17 @@ public class Game {
         });
     }
 
-    public void updateGame() {
+    private void updateGame() {
         printBoard();
         currentFigure.move(KeyCode.DOWN, composite);
         handleBottomCollision();
-        composite.removeFullRows();
+        composite.handleCompletingRow();
         checkToFinishGame();
     }
-
 
     private void printBoard() {
         boardGame.print(currentFigure, composite);
     }
-
 
     private void handleBottomCollision() {
         if (currentFigure.isSingleFieldOnHorizontalBorder() || currentFigure.isCurrentFigureOnBorderWith(composite)) {
@@ -94,7 +86,7 @@ public class Game {
     }
 
     private void createNewFigure() {
-        Figure newRandomFigure = figureFactory.getRandomFigura();
+        Figure newRandomFigure = figureFactory.getRandomFigure();
         setCurrentFigure(newRandomFigure);
     }
 
@@ -104,7 +96,6 @@ public class Game {
             running = false;
         }
     }
-
 
     private boolean isTheEndOfAGame() {
         for (SingleField singleField : composite.getCompositeSingleFields()) {

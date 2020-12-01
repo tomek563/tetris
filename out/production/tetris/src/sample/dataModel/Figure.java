@@ -2,7 +2,7 @@ package sample.dataModel;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
 
     public Figure() {
         this.singleFields = new ArrayList<>();
-        List<SingleField> tempSingleFields = setPosition(Position.UP);
+        List<SingleField> tempSingleFields = getSingleFieldsOfUpdated(Position.UP);
         singleFields.addAll(tempSingleFields);
         getChildren().addAll(singleFields);
         this.modX = 0;
@@ -29,40 +29,51 @@ public abstract class Figure extends Pane implements PrintableFigure {
         this.modY = figure.modY;
     }
 
-    public void updateSingleFields() {
+    private void updateSingleFields() {
         for (SingleField singleField : singleFields) {
             singleField.updatePosition(modX, modY);
         }
     }
 
-
     public void move(KeyCode keyCode, CompositeFigure compositeFigure) {
-        // TODO: 23.11.2020
-            if (keyCode == KeyCode.LEFT && isFuturePositionOfCompositePossible(KeyCode.LEFT ,position, compositeFigure)) {
-                moveFigureLeft();
-            } else if (keyCode.equals(KeyCode.RIGHT) && isFuturePositionOfCompositePossible(KeyCode.RIGHT,position,compositeFigure)) {
-                moveFigureRight();
-            } else if (keyCode.equals(KeyCode.SPACE) /*&& isFuturePositionOfCompositePossible(KeyCode.SPACE, position, compositeFigure)*/) { // TODO: 26.11.2020 obrot inaczej
-                rotate(compositeFigure);
-            } else if (keyCode.equals(KeyCode.DOWN)) {
-                moveFigureDown(compositeFigure);
-            }
+        if (keyCode == KeyCode.LEFT && isFigureFuturePositionPossible(KeyCode.LEFT, position, compositeFigure)) {
+            moveFigureLeft();
+        } else if (keyCode.equals(KeyCode.RIGHT) && isFigureFuturePositionPossible(KeyCode.RIGHT, position, compositeFigure)) {
+            moveFigureRight();
+        } else if (keyCode.equals(KeyCode.SPACE)) {
+            rotate(compositeFigure);
+        } else if (keyCode.equals(KeyCode.DOWN)) {
+            moveFigureDown(compositeFigure);
+        }
         updateSingleFields();
     }
 
+    private void moveFigureLeft() {
+        if (!isSingleFieldOnVerticalBorder(0)) {
+            modX--;
+        }
+    }
 
+    private void moveFigureRight() {
+        if (!isSingleFieldOnVerticalBorder(BoardGame.BOARD_WIDTH - 1)) {
+            modX++;
+        }
+    }
 
-    public void moveFigureDown(CompositeFigure compositeFigure) {
+    private void rotate(CompositeFigure compositeFigure) {
+        if (!isFigureOnBorderOnLeftoOrRightSideOfBoard()) {
+            changeActualPosition(compositeFigure);
+            updateSingleFieldsByPosition();
+        }
+    }
+
+    private void moveFigureDown(CompositeFigure compositeFigure) {
         if (!isSingleFieldOnHorizontalBorder() && !isCurrentFigureOnBorderWith(compositeFigure)) {
             modY++;
             updateSingleFields();
         }
     }
 
-
-    public void removeSingleField(SingleField singleField) {
-        singleFields.remove(singleField);
-    }
 
     public int getModX() {
         return modX;
@@ -76,14 +87,12 @@ public abstract class Figure extends Pane implements PrintableFigure {
     public boolean isCurrentFigureOnBorderWith(CompositeFigure compositeFigure) {
         List<SingleField> currentValuesOfFigure = transformCurrentFigureIntoSingleFieldsListAccordToMods();
         for (SingleField singleFieldComposite : compositeFigure.getCompositeSingleFields()) {
-            if (currentValuesOfFigure.contains(singleFieldComposite)) {
-                return true;
-            }
+            if (hasCompositePartOfFigure(singleFieldComposite, currentValuesOfFigure)) return true;
         }
         return false;
     }
 
-    public List<SingleField> transformCurrentFigureIntoSingleFieldsListAccordToMods() {
+    private List<SingleField> transformCurrentFigureIntoSingleFieldsListAccordToMods() {
         List<SingleField> singleFieldsTempList = new ArrayList<>();
         for (SingleField singleField : singleFields) {
             int newX = singleField.getGridX() + getModX();
@@ -98,44 +107,77 @@ public abstract class Figure extends Pane implements PrintableFigure {
     }
 
 
-    public void moveFigureLeft() {
-        if (!isSingleFieldOnVerticalBorder(0)) {
-            modX--;
-        }
-    }
-
-    public void moveFigureRight() {
-        if (!isSingleFieldOnVerticalBorder(BoardGame.BOARD_WIDTH - 1)) {
-            modX++;
-        }
-    }
-
-    public boolean isFigureOnBorderOnLeftoOrRightSideOfBoard() {
+    private boolean isFigureOnBorderOnLeftoOrRightSideOfBoard() {
         return isSingleFieldOnVerticalBorder(-1) || isSingleFieldOnVerticalBorder(BoardGame.BOARD_WIDTH);
     }
 
-    public void changeActualPosition(CompositeFigure compositeFigure) {
-        if (position.equals(Position.UP) && isFuturePositionPossible(Position.RIGHT, compositeFigure)) {
+    private void changeActualPosition(CompositeFigure compositeFigure) {
+        if (position.equals(Position.UP) && isFigureFuturePositionPossible(Position.RIGHT, compositeFigure)) {
             setActualPosition(Position.RIGHT);
-        } else if (position.equals(Position.RIGHT) && isFuturePositionPossible(Position.DOWN, compositeFigure)) {
+        } else if (position.equals(Position.RIGHT) && isFigureFuturePositionPossible(Position.DOWN, compositeFigure)) {
             setActualPosition(Position.DOWN);
-        } else if (position.equals(Position.DOWN) && isFuturePositionPossible(Position.LEFT, compositeFigure)) {
+        } else if (position.equals(Position.DOWN) && isFigureFuturePositionPossible(Position.LEFT, compositeFigure)) {
             setActualPosition(Position.LEFT);
-        } else if (position.equals(Position.LEFT) && isFuturePositionPossible(Position.UP, compositeFigure)) {
+        } else if (position.equals(Position.LEFT) && isFigureFuturePositionPossible(Position.UP, compositeFigure)) {
             setActualPosition(Position.UP);
         }
     }
 
-    public void rotate(CompositeFigure compositeFigure) {
-        if (!isFigureOnBorderOnLeftoOrRightSideOfBoard()) {
-            changeActualPosition(compositeFigure);
-            updateSingleFieldsByPosition();
+    private boolean isFigureFuturePositionPossible(Position position, CompositeFigure compositeFigure) {
+        List<SingleField> tempSingleField = getSingleFieldsOfUpdated(position);
+        for (SingleField singleField : tempSingleField) {
+            singleField.setGridX(singleField.getGridX() + modX);
+            singleField.setGridY(singleField.getGridY() + modY);
+            if (isFigureWithinBorderOfBoardGame(singleField)
+                    || hasCompositePartOfFigure(singleField, compositeFigure.getCompositeSingleFields())) {
+                return false;
+            }
         }
+        return true;
+    }
+
+    private boolean isFigureFuturePositionPossible(KeyCode keyCode, Position position, CompositeFigure compositeFigure) { // TODO: 23.11.2020
+        int mod = getExtraMod(keyCode);
+        List<SingleField> tempSingleField = getSingleFieldsOfUpdated(position);
+        for (SingleField singleField : tempSingleField) {
+            singleField.setGridX(singleField.getGridX() + modX + mod);
+            singleField.setGridY(singleField.getGridY() + modY);
+            if (hasCompositePartOfFigure(singleField, compositeFigure.getCompositeSingleFields())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFigureWithinBorderOfBoardGame(SingleField singleField) {
+        int x = singleField.getGridX();
+        return x < 0 || x > BoardGame.BOARD_WIDTH - 1;
+    }
+
+    private boolean hasCompositePartOfFigure(SingleField singleField, List<SingleField> compositeSingleFields) {
+        return compositeSingleFields.contains(singleField);
+    }
+
+
+    private int getExtraMod(KeyCode keyCode) {
+        int mod;
+        switch (keyCode) {
+            case LEFT:
+                mod = -1;
+                break;
+            case RIGHT:
+                mod = 1;
+                break;
+            default:
+                mod = 0;
+                break;
+        }
+        return mod;
     }
 
     private void updateSingleFieldsByPosition() {
         singleFields.clear();
-        List<SingleField> singleFields = setPosition(position);
+        List<SingleField> singleFields = getSingleFieldsOfUpdated(position);
         this.singleFields.addAll(singleFields);
         setSpecificColor();
         getChildren().clear();
@@ -143,7 +185,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
     }
 
 
-    public List<SingleField> setPosition(Position position) {
+    private List<SingleField> getSingleFieldsOfUpdated(Position position) {
         List<SingleField> singleFields;
         switch (position) {
             case UP:
@@ -164,16 +206,6 @@ public abstract class Figure extends Pane implements PrintableFigure {
         return singleFields;
     }
 
-    public abstract void setSpecificColor();
-
-    public abstract List<SingleField> getFieldsForPositionUp();
-
-    public abstract List<SingleField> getFieldsForPositionDown();
-
-    public abstract List<SingleField> getFieldsForPositionLeft();
-
-    public abstract List<SingleField> getFieldsForPositionRight();
-
     public boolean isSingleFieldOn(int x, int y) {
         for (SingleField singleField : singleFields) {
             if (singleField.getGridX() + modX == x && singleField.getGridY() + modY == y) {
@@ -183,7 +215,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
         return false;
     }
 
-    public boolean isSingleFieldOnVerticalBorder(int x) {
+    private boolean isSingleFieldOnVerticalBorder(int x) {
         for (SingleField singleField : singleFields) {
             if (singleField.getGridX() + modX == x) {
                 return true;
@@ -201,55 +233,24 @@ public abstract class Figure extends Pane implements PrintableFigure {
         return false;
     }
 
+    public Paint getFigureColor() {
+        return singleFields.get(0).getFill();
+    }
 
-    public void setActualPosition(Position position) {
+    private void setActualPosition(Position position) {
         this.position = position;
     }
-    public boolean isFuturePositionPossible(Position position, CompositeFigure compositeFigure) { // TODO: 26.11.2020 dodac warunek do obrotu z funkcji ponizej
-        System.out.println(position);
-        System.out.println("singleFields przed "+singleFields);
-        List<SingleField> tempSingleField = setPosition(position);
-        for (SingleField singleField : tempSingleField) {
-            singleField.setGridX(singleField.getGridX() + modX);
-            singleField.setGridY(singleField.getGridY() + modY);
-            System.out.println("singleField po "+singleField);
-            int i = singleField.getGridX();
-            if (i<0 || i>BoardGame.BOARD_WIDTH-1) {
-                return false;
-            }
-            if (compositeFigure.getCompositeSingleFields().contains(singleField)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    public boolean isFuturePositionOfCompositePossible(KeyCode keyCode, Position position, CompositeFigure compositeFigure) { // TODO: 23.11.2020
-        int mod = getExtraMod(keyCode);
-        List<SingleField> tempSingleField = setPosition(position);
-        for (SingleField singleField : tempSingleField) {
-            singleField.setGridX(singleField.getGridX() + modX + mod);
-            singleField.setGridY(singleField.getGridY() + modY);
-            if (compositeFigure.getCompositeSingleFields().contains(singleField)) {
-                return false;
-            }
-        }
-        return true;
-    }
+    public abstract void setSpecificColor();
 
-    private int getExtraMod(KeyCode keyCode) {
-        int mod;
-        switch(keyCode) {
-            case LEFT: mod = -1;
-                break;
-            case RIGHT: mod =1;
-                break;
-            default:
-                mod = 0;
-                break;
-        }
-        return mod;
-    }
+    public abstract List<SingleField> getFieldsForPositionUp();
+
+    public abstract List<SingleField> getFieldsForPositionDown();
+
+    public abstract List<SingleField> getFieldsForPositionLeft();
+
+    public abstract List<SingleField> getFieldsForPositionRight();
+
 
     @Override
     public String toString() {
@@ -260,4 +261,5 @@ public abstract class Figure extends Pane implements PrintableFigure {
                 ", modY=" + modY +
                 '}';
     }
+
 }

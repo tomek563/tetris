@@ -51,19 +51,6 @@ public class SingleField extends Rectangle {
 
     }
 
-    public boolean isOnField(SingleField other) {
-        return actualGridX == other.actualGridX && actualGridY == other.actualGridY;
-    }
-
-    @Override
-    public String toString() {
-        return "SingleField{" +
-                "X=" + gridX +
-                ", Y=" + gridY +
-                '}';
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,5 +63,13 @@ public class SingleField extends Rectangle {
     @Override
     public int hashCode() {
         return Objects.hash(gridX, gridY);
+    }
+
+    @Override
+    public String toString() {
+        return "SingleField{" +
+                "X=" + gridX +
+                ", Y=" + gridY +
+                '}';
     }
 }

@@ -12,8 +12,8 @@ public class ZFigure2 extends Figure {
     }
 
     public void setSpecificColor() {
-        for (SingleField tempSingleField : singleFields) {
-            tempSingleField.setFill(Color.PURPLE);
+        for (SingleField singleField : singleFields) {
+            singleField.setFill(Color.PURPLE);
         }
     }
 

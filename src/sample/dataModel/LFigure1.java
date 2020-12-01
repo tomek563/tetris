@@ -11,10 +11,6 @@ public class LFigure1 extends Figure {
         setSpecificColor();
     }
 
-    public LFigure1(Figure figure) {
-        super(figure);
-    }
-
     public void setSpecificColor() {
         for (SingleField singleField : singleFields) {
             singleField.setFill(Color.YELLOW);

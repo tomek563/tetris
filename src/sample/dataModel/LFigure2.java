@@ -12,8 +12,8 @@ public class LFigure2 extends Figure {
     }
 
     public void setSpecificColor() {
-        for (SingleField tempSingleField : singleFields) {
-            tempSingleField.setFill(Color.ORANGE);
+        for (SingleField singleField : singleFields) {
+            singleField.setFill(Color.ORANGE);
         }
     }
 

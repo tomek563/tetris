@@ -12,8 +12,8 @@ public class LongFigure extends Figure {
     }
 
     public void setSpecificColor() {
-        for (SingleField tempSingleField : singleFields) {
-            tempSingleField.setFill(Color.GREEN);
+        for (SingleField singleField : singleFields) {
+            singleField.setFill(Color.GREEN);
         }
     }
 
@@ -24,11 +24,6 @@ public class LongFigure extends Figure {
         singleFields.add(new SingleField(5, 0));
         singleFields.add(new SingleField(6, 0));
         return singleFields;
-    }
-
-    @Override
-    public List<SingleField> getFieldsForPositionDown() {
-        return getFieldsForPositionUp();
     }
 
     @Override
@@ -45,4 +40,10 @@ public class LongFigure extends Figure {
     public List<SingleField> getFieldsForPositionRight() {
         return getFieldsForPositionLeft();
     }
+
+    @Override
+    public List<SingleField> getFieldsForPositionDown() {
+        return getFieldsForPositionUp();
+    }
+
 }

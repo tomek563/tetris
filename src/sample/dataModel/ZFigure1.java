@@ -13,8 +13,8 @@ public class ZFigure1 extends Figure {
     }
 
     public void setSpecificColor() {
-        for (SingleField tempSingleField : singleFields) {
-            tempSingleField.setFill(Color.BLUE);
+        for (SingleField singleField : singleFields) {
+            singleField.setFill(Color.BLUE);
         }
     }
 
@@ -26,11 +26,6 @@ public class ZFigure1 extends Figure {
         singleFields.add(new SingleField(4, 1));
         singleFields.add(new SingleField(4, 2));
         return singleFields;
-    }
-
-    @Override
-    public List<SingleField> getFieldsForPositionDown() {
-        return getFieldsForPositionUp();
     }
 
     @Override
@@ -47,5 +42,11 @@ public class ZFigure1 extends Figure {
     public List<SingleField> getFieldsForPositionRight() {
         return getFieldsForPositionLeft();
     }
+
+    @Override
+    public List<SingleField> getFieldsForPositionDown() {
+        return getFieldsForPositionUp();
+    }
+
 }
 

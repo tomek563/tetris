@@ -19,7 +19,7 @@ public class CompositeFigure extends Pane implements PrintableFigure {
     }
 
     public void addToComposite(Figure figure) {
-        Paint color = figure.singleFields.get(0).getFill();
+        Paint color = figure.getFigureColor();
         List<SingleField> tempSingleFields = transformCompositeIntoSingleFieldsAccordToMods(figure);
         compositeSingleFields.addAll(tempSingleFields);
         getChildren().addAll(tempSingleFields);
@@ -28,7 +28,7 @@ public class CompositeFigure extends Pane implements PrintableFigure {
         }
     }
 
-    public List<SingleField> transformCompositeIntoSingleFieldsAccordToMods(Figure figure) {
+    private List<SingleField> transformCompositeIntoSingleFieldsAccordToMods(Figure figure) {
         List<SingleField> singleFieldsTempList = new ArrayList<>();
         for (SingleField singleField : figure.getSingleFields()) {
             int newX = singleField.getGridX() + figure.getModX();
@@ -39,16 +39,7 @@ public class CompositeFigure extends Pane implements PrintableFigure {
     }
 
 
-    public boolean isAnyRowFilled() {
-        for (int y = 0; y < BoardGame.BOARD_HEIGHT; y++) {
-            if (isSingleRowFilled(y)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isSingleRowFilled(int row) {
+    private boolean isSingleRowFilled(int row) {
         int sum = 0;
         for (int x = 0; x < BoardGame.BOARD_WIDTH; x++) {
             SingleField tempSingleField = new SingleField(x, row);
@@ -59,18 +50,17 @@ public class CompositeFigure extends Pane implements PrintableFigure {
         return sum == 10;
     }
 
-    public void removeLineFields(int y) {
+    private void removeLineFields(int y) {
         List<SingleField> singleFieldsToRemove = new ArrayList<>();
         for (int x = 0; x < BoardGame.BOARD_WIDTH; x++) {
             SingleField tempSingleField = new SingleField(x, y);
             singleFieldsToRemove.add(tempSingleField);
         }
-
         compositeSingleFields.removeAll(singleFieldsToRemove);
         getChildren().removeAll(singleFieldsToRemove);
     }
 
-    public List<Integer> getListNumberOfFullRow() {
+    private List<Integer> getListOfNumberOfFullRows() {
         List<Integer> nowa = new ArrayList<>();
         for (int y = 0; y < BoardGame.BOARD_HEIGHT; y++) {
             if (isSingleRowFilled(y)) {
@@ -80,23 +70,30 @@ public class CompositeFigure extends Pane implements PrintableFigure {
         return nowa;
     }
 
-    public void removeFullRows() {
-        List<Integer> listOfNumberOfFullRow = getListNumberOfFullRow();
+    public void handleCompletingRow() {
+        List<Integer> listOfNumberOfFullRow = getListOfNumberOfFullRows();
+        removeFullRows(listOfNumberOfFullRow);
+        lowerRows(listOfNumberOfFullRow);
+    }
+
+    private void removeFullRows(List<Integer> listOfNumberOfFullRow) {
         if (!listOfNumberOfFullRow.isEmpty()) {
             for (Integer integer : listOfNumberOfFullRow) {
                 removeLineFields(integer);
             }
         }
+    }
+
+    private void lowerRows(List<Integer> listOfNumberOfFullRow) {
         for (Integer integer : listOfNumberOfFullRow) {
             lowerRowsAboveErasedLine(integer);
         }
-
     }
 
-    public void lowerRowsAboveErasedLine(int y) {
+    private void lowerRowsAboveErasedLine(int y) {
         for (SingleField singleField : compositeSingleFields) {
             if (singleField.getGridY() < y) {
-                Node node = getChildren().filtered(x -> x.equals(singleField)).get(0); // TODO: 23.11.2020 jakis bład z get indexoutofbound
+                Node node = getChildren().filtered(x -> x.equals(singleField)).get(0);
                 getChildren().remove(node);
                 int newSingleFieldY = singleField.getGridY() + 1;
                 singleField.setGridY(newSingleFieldY);
