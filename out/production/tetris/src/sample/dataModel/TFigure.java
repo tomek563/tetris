@@ -12,8 +12,8 @@ public class TFigure extends Figure {
     }
 
     public void setSpecificColor() {
-        for (SingleField tempSingleField : singleFields) {
-            tempSingleField.setFill(Color.RED);
+        for (SingleField singleField : singleFields) {
+            singleField.setFill(Color.RED);
         }
     }
 

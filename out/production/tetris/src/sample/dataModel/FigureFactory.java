@@ -7,7 +7,7 @@ public class FigureFactory {
     public FigureFactory() {
     }
 
-    public Figure getRandomFigura() {
+    public Figure getRandomFigure() {
         Random random = new Random();
         int num = random.nextInt(7);
         Figure figure;

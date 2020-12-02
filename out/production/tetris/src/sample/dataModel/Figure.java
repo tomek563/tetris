@@ -136,7 +136,7 @@ public abstract class Figure extends Pane implements PrintableFigure {
         return true;
     }
 
-    private boolean isFigureFuturePositionPossible(KeyCode keyCode, Position position, CompositeFigure compositeFigure) { // TODO: 23.11.2020
+    private boolean isFigureFuturePositionPossible(KeyCode keyCode, Position position, CompositeFigure compositeFigure) { 
         int mod = getExtraMod(keyCode);
         List<SingleField> tempSingleField = getSingleFieldsOfUpdated(position);
         for (SingleField singleField : tempSingleField) {
