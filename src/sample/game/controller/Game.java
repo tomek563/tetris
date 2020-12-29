@@ -16,6 +16,8 @@ import sample.game.Player;
 import sample.game.ScoresLabel;
 import sample.game.ScoresManager;
 
+import java.util.List;
+
 public class Game extends Stage {
     protected final static int FIELD_SIZE = 40;
     public final static int WIDTH = 411;
@@ -155,13 +157,17 @@ public class Game extends Stage {
     }
 
     private boolean isTheEndOfAGame() {
-        for (SingleField singleField : composite.getCompositeSingleFields()) {
-            if (singleField.getGridY() == 1) {
+        List<SingleField> compositeSingleFields = composite.getCompositeSingleFields();
+        List<SingleField> singleFields = currentFigure.getSingleFields();
+        for (SingleField field : singleFields) {
+            if (compositeSingleFields.contains(field)) {
                 return true;
             }
         }
         return false;
     }
+
+
 
 }
 
